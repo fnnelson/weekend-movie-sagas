@@ -8,12 +8,13 @@ import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 // Import saga middleware
 import createSagaMiddleware from 'redux-saga';
-import { takeEvery, put } from 'redux-saga/effects';
+import { takeEvery, put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
 // Create the rootSaga generator function
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
+    yield takeLatest('CLICKED_MOVIE', updateMovieClicked)
 }
 
 function* fetchAllMovies() {
@@ -26,7 +27,22 @@ function* fetchAllMovies() {
     } catch {
         console.log('get all error');
     }
-        
+}
+
+function* updateMovieClicked(action) {
+    // update object state to latest movie clicked, so details view shows that movie's info
+    console.log("movie to be updated for now showing:", action.payload)
+    yield put({ type: 'NOW_SHOWING', payload: action.payload })
+}
+
+// reducer used to update to the latest clicked movie, so its details can be used on the MovieDetails page
+const movieDetail = (state = {}, action) => {
+    switch (action.type) {
+        case 'NOW_SHOWING':
+            return action.payload;
+        default:
+            return state;
+    }
 }
 
 // Create sagaMiddleware
@@ -57,6 +73,7 @@ const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
+        movieDetail
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),
