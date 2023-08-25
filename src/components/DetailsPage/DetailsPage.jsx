@@ -16,6 +16,9 @@ function DetailsPage() {
             <img src={feature.poster} alt={feature.title} />
             <p>{feature.description}</p>
             <h3>Genres:</h3>
+            {feature.genres.map(genre => (
+                <p>{genre.name}</p>
+            ))}
         </main>
     )
 
