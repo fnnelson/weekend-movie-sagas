@@ -15,6 +15,7 @@ function DetailsPage() {
             <h3>{feature.title}</h3>
             <img src={feature.poster} alt={feature.title} />
             <p>{feature.description}</p>
+            <h3>Genres:</h3>
         </main>
     )
 

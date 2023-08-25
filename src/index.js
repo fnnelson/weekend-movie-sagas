@@ -14,7 +14,7 @@ import axios from 'axios';
 // Create the rootSaga generator function
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
-    yield takeLatest('CLICKED_MOVIE', updateMovieClicked)
+    yield takeLatest('CLICKED_MOVIE', getMovieClicked)
 }
 
 function* fetchAllMovies() {
@@ -25,14 +25,21 @@ function* fetchAllMovies() {
         yield put({ type: 'SET_MOVIES', payload: movies.data });
 
     } catch {
-        console.log('get all error');
+        console.error('get all error');
     }
 }
 
-function* updateMovieClicked(action) {
-    // update object state to latest movie clicked, so details view shows that movie's info
-    console.log("movie to be updated for now showing:", action.payload)
-    yield put({ type: 'NOW_SHOWING', payload: action.payload })
+function* getMovieClicked(action) {
+    // requesting specific movie and its genres from the DB
+    try {
+        const movieId = action.payload.id
+        console.log("movie to be updated for now showing:", action.payload, "and its ID:", movieId)
+        const clickedMovie = yield axios.get(`/api/genre/${movieId}`)
+        yield put({ type: 'NOW_SHOWING', payload: action.payload })
+        yield put({ type: 'GET_GENRES', payload: clickedMovie.data })
+    } catch {
+        console.error('get clicked movie error')
+    }
 }
 
 // reducer used to update to the latest clicked movie, so its details can be used on the MovieDetails page
@@ -40,6 +47,8 @@ const movieDetail = (state = {}, action) => {
     switch (action.type) {
         case 'NOW_SHOWING':
             return action.payload;
+        case 'GET_GENRES':
+            return {...state, genres: action.payload};
         default:
             return state;
     }
