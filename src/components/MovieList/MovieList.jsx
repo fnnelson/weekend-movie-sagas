@@ -13,8 +13,8 @@ function MovieList() {
         console.log("clicked a movie:", flick)
         // intend to add latest movie clicked onto a global state for the details page to pull that info in
         dispatch({ type: 'CLICKED_MOVIE', payload: flick })
+        // note - this is a slight workaround from the GET_GENRES dispatch not being done by the time we move to /details.  I think a better way could be done, though need to tinker around with where and when the calls are being made to be in order.
         setTimeout(() => { history.push('/details') }, 100)
-        // history.push(`/details/${flick.id}`)
     }
 
     useEffect(() => {
