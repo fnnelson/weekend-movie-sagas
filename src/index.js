@@ -33,10 +33,15 @@ function* getMovieClicked(action) {
     // requesting specific movie and its genres from the DB
     try {
         const movieId = action.payload.id
+
         console.log("movie to be updated for now showing:", action.payload, "and its ID:", movieId)
-        const clickedMovie = yield axios.get(`/api/genre/${movieId}`)
         yield put({ type: 'NOW_SHOWING', payload: action.payload })
+
+        const clickedMovie = yield axios.get(`/api/genre/${movieId}`)
+
+        console.log("movie genres on GET", clickedMovie.data)
         yield put({ type: 'GET_GENRES', payload: clickedMovie.data })
+
     } catch {
         console.error('get clicked movie error')
     }
@@ -48,7 +53,7 @@ const movieDetail = (state = {}, action) => {
         case 'NOW_SHOWING':
             return action.payload;
         case 'GET_GENRES':
-            return {...state, genres: action.payload};
+            return { ...state, genres: action.payload };
         default:
             return state;
     }

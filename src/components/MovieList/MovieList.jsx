@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './MovieList.css'
-import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
 function MovieList() {
@@ -14,7 +13,8 @@ function MovieList() {
         console.log("clicked a movie:", flick)
         // intend to add latest movie clicked onto a global state for the details page to pull that info in
         dispatch({ type: 'CLICKED_MOVIE', payload: flick })
-        history.push('/details')
+        setTimeout(() => { history.push('/details') }, 100)
+        // history.push(`/details/${flick.id}`)
     }
 
     useEffect(() => {

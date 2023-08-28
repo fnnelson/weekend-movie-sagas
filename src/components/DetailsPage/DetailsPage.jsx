@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 
 function DetailsPage() {
 
+
     const feature = useSelector(store => store.movieDetail)
+
+    console.log("genres from store:", feature.genres)
+    console.log("features object is:", feature)
 
     return (
         <main>
@@ -16,9 +20,13 @@ function DetailsPage() {
             <img src={feature.poster} alt={feature.title} />
             <p>{feature.description}</p>
             <h3>Genres:</h3>
-            {feature.genres.map(genre => (
-                <p>{genre.name}</p>
-            ))}
+            <div>
+                {feature.genres.map((genre, index) => (
+                    <div key={index}>
+                        <p>{genre.name}</p>
+                    </div>
+                ))}
+            </div>
         </main>
     )
 
